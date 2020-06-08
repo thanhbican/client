@@ -21,7 +21,13 @@ export default {
         content: process.env.npm_package_description || ""
       }
     ],
-    link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }]
+    link: [
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Oswald&display=swap"
+      }
+    ]
   },
   /*
    ** Customize the progress-bar color
@@ -30,11 +36,11 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ["~/assets/fonts/style.css"],
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ["~/plugins/vueSax.js",{ src: '~/plugins/localStorage.js', ssr: false }],
   /*
    ** Nuxt.js dev-modules
    */
@@ -105,14 +111,16 @@ export default {
      */
   },
   auth: {
+    localStorage: false,
+    cookie: false,
     strategies: {
       local: {
         endpoint: {
           login: {
             propertyName: "token"
           },
-          logout: true,
-        }
+          logout: true
+        },
       }
     }
   }
