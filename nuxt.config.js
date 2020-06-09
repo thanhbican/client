@@ -26,6 +26,10 @@ export default {
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Oswald&display=swap"
+      },
+      {
+        rel: "stylesheet",
+        href: "https://allfont.net/allfont.css?fonts=open-sans"
       }
     ]
   },

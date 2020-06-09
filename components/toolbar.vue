@@ -4,7 +4,7 @@
       <v-app-bar color="white" fixed app flat style="height:80px">
         <v-row class="" justify="center" align="center">
           <v-col cols="3.5" class="text-right">
-            <v-btn text color="#140f12" large class="logo text-none"
+            <v-btn text color="#140f12" large class="logo text-none" @click="()=>this.$router.push(`/`)"
               >thefaceshop</v-btn
             >
 
@@ -23,10 +23,11 @@
             <v-btn
               color="orange"
               class="white--text"
-              
+              to="/cart"
             >
               {{getCartLength}}
               <v-icon>mdi-cart</v-icon>
+              
             </v-btn>
             
             <v-menu offset-y v-if="$auth.$state.loggedIn">

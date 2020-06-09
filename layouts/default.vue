@@ -18,5 +18,6 @@ export default {
 <style scoped>
 #app{
   font-family: "Helvetica", sans-serif;
+  /* font-family: 'Open Sans', arial; */
 }
 </style>
