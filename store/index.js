@@ -63,5 +63,10 @@ export const getters = {
   },
   getCart(state) {
     return state.cart;
+  },
+  getTotal(state) {
+    let total = 0;
+    state.cart.map(prod => (total += prod.quantity * prod.price));
+    return total;
   }
 };
