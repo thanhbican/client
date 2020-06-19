@@ -2,24 +2,25 @@
   <div>
     <v-card
       elevation="0"
-      max-width="1450"
+      max-width="1050"
       class="mx-auto"
-      style="border-radius: 50px"
     >
       <v-skeleton-loader
         :loading="loading"
         class="skeletonMain mx-auto"
-        max-width="1450"
+        max-width="1050"
         height="400"
         type="image"
       >
         <v-carousel
-          height="400"
+          height="409"
           cycle
           hide-delimiter-background
           show-arrows-on-hover
           delimiter-icon="mdi-minus"
           interval="3000"
+          progress-color="#EB7400"
+          class="carousel"
         >
           <v-carousel-item
             v-for="(item, i) in items"
@@ -31,105 +32,86 @@
     </v-card>
 
     <v-container
-      style="max-width: 1450px;"
+      style="max-width: 1050px;"
       v-for="(category, index) in categories"
       :key="index"
     >
       <v-skeleton-loader
         :loading="loading"
         class="mx-auto skeleton"
-        max-width="1450"
+        max-width="1050"
         height="600"
         type="image"
       >
         <v-card
-          class="text-center"
-          color="#41BC76"
-          max-width="340"
+          class="text-center rounded-xl"
+          color="grey darken-4"
+          max-width="200"
           outlined
-          style="border-radius: 15px"
         >
-          <v-btn text class="text-capitalize">
+          <!-- type -->
+          <v-btn
+            text
+            class="text-capitalize text-subtitle-2 white--text"
+            :to="`/categories/${category._id[0].slug}`"
+          >
             {{ category._id[0].type }}
           </v-btn>
         </v-card>
 
         <v-row>
-          <v-col cols="3" class="d-flex align-stretch" style="max-height:600px">
+          <!-- <v-col cols="3" class="d-flex align-stretch" style="max-height:600px">
             <v-img
               src="https://img.alicdn.com/tfs/TB1EBO.Cxn1gK0jSZKPXXXvUXXa-468-1236.png"
               aspect-ratio="1.7"
               style="border-radius: 25px"
             ></v-img>
-          </v-col>
-          <!-- col-9 -->
-          <v-col cols="9">
+          </v-col> -->
+          <!-- col-12 -->
+          <v-col cols="12">
             <swiper class="swiper" :options="swiperOption">
               <!-- swiper-slide -->
               <swiper-slide
-                v-for="(product, index) in category.products"
+                v-for="(product, index) in category.products.slice(0, 6)"
                 :key="index"
               >
                 <!-- hover-card -->
-                <vs-card
-                  actionable
-                  class="cardx cardCustom"
-                  style="border-radius: 25px"
-                >
+                <vs-card actionable>
                   <v-card
-                    class="mx-auto"
-                    max-width="344"
+                    class="text-center"
                     outlined
-                    color=""
-                    style="border-radius: 25px"
-                    @click="checkRoute(product._id, $event)"
+                    @click="checkRoute(product._id)"
                   >
-                    <v-img :src="product.photo">
-                      <!-- expand -->
-                      <!-- <v-expand-transition>
-                        <div
-                          v-if="hover"
-                          class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal white--text"
-                          style="height: 100%;"
-                        >
-                          Add to Cart
+                    <v-img :src="product.photo" contain> </v-img>
+                    <v-card class="rounded-xl ma-5" outlined color="">
+                      <v-card-title
+                        class="mt-4 item-title d-block text-subtitle-2"
+                      >
+                        {{ product.title }}
+                      </v-card-title>
+                      <!-- <v-card-subtitle
+                        style="color:#CCC7FF"
+                        class="text-subtitle-1 ml-5"
+                      >
+                        Grape Fruit
+                      </v-card-subtitle> -->
+                      <v-card-title class="">
+                        <div style="width: 100%">
+                          <div class="red--text ">
+                            {{ product.price | moneyFilter }}
+                          </div>
+                          <div>
+                            <v-btn
+                              small
+                              color="orange"
+                              @click.stop="addProduct(product)"
+                            >
+                              <v-icon small color="white">mdi-cart</v-icon>
+                            </v-btn>
+                          </div>
                         </div>
-                      </v-expand-transition> -->
-                    </v-img>
-                    <v-card-text class="" style="position: relative;">
-                      <v-btn
-                        absolute
-                        color="orange"
-                        class="white--text"
-                        fab
-                        small
-                        right
-                        top
-                        @click="
-                          addProductToCart(product) &&
-                            $vs.notify({
-                              title: 'Added',
-                              text: product.title,
-                              color: 'success'
-                            })
-                        "
-                      >
-                        <v-icon>mdi-cart</v-icon>
-                      </v-btn>
-                    </v-card-text>
-                    <div class="item-title text-center">
-                      {{ product.title }}
-                    </div>
-                    <div class="text-center">
-                      <font color="#ff1446" style="font-size: 1rem"
-                        >{{ product.price | moneyFilter }} ₫</font
-                      >
-                      <font
-                        color="grey"
-                        style="text-decoration: line-through; font-size: 13px"
-                        >500.000 ₫</font
-                      >
-                    </div>
+                      </v-card-title>
+                    </v-card>
                   </v-card>
                 </vs-card>
               </swiper-slide>
@@ -137,14 +119,14 @@
                 class="swiper-pagination swiper-pagination"
                 slot="pagination"
               ></div>
-              <div
+              <!-- <div
                 class="swiper-button-prev swiper-button-black"
                 slot="button-prev"
               ></div>
               <div
                 class="swiper-button-next swiper-button-black"
                 slot="button-next"
-              ></div>
+              ></div> -->
             </swiper>
           </v-col>
         </v-row>
@@ -155,6 +137,7 @@
 // script/////////////////////////////////////////////////////////
 <script>
 import { mapActions } from "vuex";
+import { mapGetters } from "vuex";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 export default {
@@ -179,8 +162,8 @@ export default {
       //swiper
       swiperOption: {
         slidesPerView: 4,
-        slidesPerColumn: 2,
-        spaceBetween: 100,
+        slidesPerColumn: 1,
+        spaceBetween: 20,
         pagination: {
           el: ".swiper-pagination",
           clickable: true
@@ -193,26 +176,29 @@ export default {
       items: [
         {
           src:
-            "https://scontent.fsgn5-3.fna.fbcdn.net/v/t1.0-9/60067965_2685199448161975_381952038633734144_o.jpg?_nc_cat=111&_nc_sid=dd9801&_nc_ohc=0j2pi7axTaIAX8eic4d&_nc_ht=scontent.fsgn5-3.fna&oh=13f70c8aa02b28477844c33445b361d1&oe=5EFE461A"
+            "http://image.ethefaceshop.com/tfsshopWebSrc/upload/banner//202006/banner_20200616130371846.jpg"
         },
         {
           src:
-            "https://reviewsmoi.com/wp-content/uploads/2019/10/anhbanner-1021x490.png"
+            "http://image.ethefaceshop.com/tfsshopWebSrc/upload/banner//202006/banner_20200604122032400.jpg"
         },
         {
           src:
-            "https://scontent.fsgn5-4.fna.fbcdn.net/v/t1.0-9/p960x960/76612207_2374984722740729_7881253971568885760_o.jpg?_nc_cat=102&_nc_sid=dd9801&_nc_ohc=pCfJ2ngzatsAX8nJXg4&_nc_ht=scontent.fsgn5-4.fna&_nc_tp=6&oh=142bf418502dad96c6e18e46aeb86fb0&oe=5EFE5762"
+            "http://image.ethefaceshop.com/tfsshopWebSrc/upload/banner//202006/banner_20200604122094117.jpg"
         },
         {
           src:
-            "https://scontent.fsgn5-2.fna.fbcdn.net/v/t1.0-9/97095628_3515734558441789_4490935001470205952_n.jpg?_nc_cat=105&_nc_sid=110474&_nc_ohc=bsMdT5lsUkcAX9ulHrw&_nc_ht=scontent.fsgn5-2.fna&oh=fbcae5c1c0773e6753dce1efa917a3fb&oe=5EFC25BB"
+            "http://image.ethefaceshop.com/tfsshopWebSrc/upload/banner//202006/banner_20200616130443211.jpg"
         }
       ]
     };
   },
   filters: {
     moneyFilter: function(money = 0) {
-      return money.toFixed(3);
+      return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND"
+      }).format(money);
     }
   },
   mounted() {
@@ -221,9 +207,36 @@ export default {
   methods: {
     ...mapActions(["addProductToCart"]),
     checkRoute(id, event) {
-      if (event.target.tagName !== "I" && event.target.tagName !== "BUTTON")
         this.$router.push(`/product/${id}`);
+    },
+    addProduct(product) {
+      let prod = this.getCart.find(prod => prod._id === product._id);
+      if (prod === undefined) {
+        this.addProductToCart(product) &&
+          this.$vs.notify({
+            title: "Đã thêm",
+            text: product.title,
+            color: "success"
+          });
+      } else if (prod.quantity < prod.stockQuantity) {
+        this.addProductToCart(product) &&
+          this.$vs.notify({
+            title: "Đã thêm",
+            text: product.title,
+            color: "success"
+          });
+      } else {
+        this.addProductToCart(product) &&
+          this.$vs.notify({
+            title: "Lỗi",
+            text: "Kho hàng của sản phẩm không đủ",
+            color: "danger"
+          });
+      }
     }
+  },
+  computed: {
+    ...mapGetters(["getCart"])
   }
 };
 </script>
@@ -274,14 +287,6 @@ export default {
 /* .swiper-pagination{
   position: static;
 } */
-.swiper {
-  height: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-.swiper-slide {
-  height: 200px;
-}
 /* item */
 .item-title {
   padding: 0.3rem;
@@ -308,8 +313,13 @@ export default {
   width: 100%;
 }
 .cardCustom >>> .vs-card--content {
-  padding: 0px;
   font-size: 0.8rem;
   margin-bottom: 0px;
+}
+.carousel >>> .v-image__image.v-image__image--cover {
+  background-size: contain;
+}
+.theme--light.v-sheet--outlined {
+  border: none !important;
 }
 </style>

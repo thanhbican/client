@@ -1,7 +1,8 @@
 export const state = () => ({
   //State
   cart: [],
-  cartLength: 0
+  cartLength: 0,
+  sale: 0
 });
 
 export const actions = {
@@ -54,6 +55,12 @@ export const mutations = {
     state.cartLength -= product.quantity;
     let indexOfProduct = state.cart.indexOf(product);
     state.cart.splice(indexOfProduct, 1);
+  },
+  changeTotalSave(state, sale) {
+    state.sale = sale;
+  },
+  resetState(state) {
+    (state.cart = []), (state.cartLength = 0), (state.sale = 0);
   }
 };
 
@@ -68,5 +75,13 @@ export const getters = {
     let total = 0;
     state.cart.map(prod => (total += prod.quantity * prod.price));
     return total;
+  },
+  getTotalSave(state) {
+    let total = 0;
+    state.cart.map(prod => (total += prod.quantity * prod.price));
+    return total * (1 - state.sale);
+  },
+  getSale(state) {
+    return state.sale;
   }
 };

@@ -11,19 +11,23 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@neneos/nuxt-animate.css": "0.0.1",
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/pwa": "^3.0.0-0",
     "@nuxtjs/recaptcha": "^0.6.2",
+    "animate.css": "^4.1.0",
     "material-icons": "^0.3.1",
     "nuxt": "^2.0.0",
+    "secure-ls": "^1.2.6",
     "swiper": "^5.4.2",
     "vee-validate": "^3.3.1",
     "vue-awesome-swiper": "^4.1.1",
+    "vue-kinesis": "^1.1.5",
     "vuesax": "^3.11.15",
     "vuex-persistedstate": "^3.0.1"
   },
   "devDependencies": {
-    "@nuxtjs/vuetify": "^1.0.0"
+    "@nuxtjs/vuetify": "^1.11.2"
   }
 }

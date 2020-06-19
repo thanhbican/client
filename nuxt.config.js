@@ -30,7 +30,8 @@ export default {
       {
         rel: "stylesheet",
         href: "https://allfont.net/allfont.css?fonts=open-sans"
-      }
+      },
+      { rel: 'stylesheet', href:"https://fonts.googleapis.com/css?family=Material+Icons"}
     ]
   },
   /*
@@ -44,7 +45,7 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["~/plugins/vueSax.js",{ src: '~/plugins/localStorage.js', ssr: false }],
+  plugins: [{ src: '~/plugins/kinesis.js', mode: 'client' },"~/plugins/vueSax.js",{ src: '~/plugins/localStorage.js', ssr: false }],
   /*
    ** Nuxt.js dev-modules
    */
@@ -57,6 +58,7 @@ export default {
     "@nuxtjs/axios",
     "@nuxtjs/pwa",
     "@nuxtjs/auth",
+    '@neneos/nuxt-animate.css',
     [
       "@nuxtjs/recaptcha",
       {

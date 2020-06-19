@@ -1,10 +1,17 @@
 import createPersistedState from "vuex-persistedstate";
+import SecureLS from "secure-ls";
+var ls = new SecureLS({ isCompression: false });
 
-export default ({store}) => {
+export default ({ store }) => {
   window.onNuxtReady(() => {
     createPersistedState({
-        key: 'TFS-cart',
-        paths: ['cart','cartLength']
-    })(store)
-  })
-}
+      key: "TFS",
+      paths: ["cart", "cartLength"],
+      storage: {
+        getItem: key => ls.get(key),
+        setItem: (key, value) => ls.set(key, value),
+        removeItem: key => ls.remove(key)
+      }
+    })(store);
+  });
+};
