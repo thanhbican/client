@@ -1,135 +1,130 @@
 <template>
   <div>
-    <v-row>
-      <v-col cols="1"></v-col>
-      <v-col cols="6">
-        <v-breadcrumbs :items="items"></v-breadcrumbs>
+    <v-card class="mx-auto" max-width="1030" elevation="0">
+      <v-row>
+        <v-breadcrumbs disabled :items="items"></v-breadcrumbs>
+      </v-row>
 
-        <v-card
-          elevation="0"
-          max-width="1450"
-          class="mx-auto"
-          style="border-radius: 50px"
-        >
-          <v-card-title>
-            Shipment Details
-          </v-card-title>
-          <ValidationObserver ref="form">
-            <form>
-              <v-row justify="center" align="center">
-                <v-col cols="5">
-                  <ValidationProvider
-                    v-slot="{ errors }"
-                    name="Name"
-                    rules="required"
-                  >
-                    <v-text-field
-                      label="Name"
-                      v-model="name"
-                      outlined
-                      :error-messages="errors"
-                    ></v-text-field>
-                  </ValidationProvider>
-                </v-col>
-                <v-col cols="7">
-                  <ValidationProvider
-                    v-slot="{ errors }"
-                    name="Phone"
-                    rules="required|numeric|min:8"
-                  >
-                    <v-text-field
-                      label="Phone Number"
-                      v-model="phoneNumber"
-                      outlined
-                      :error-messages="errors"
-                    ></v-text-field>
-                  </ValidationProvider>
-                </v-col>
-              </v-row>
-              <v-row justify="center" align="center">
-                <v-col cols="12">
-                  <ValidationProvider
-                    v-slot="{ errors }"
-                    name="Adress"
-                    rules="required"
-                  >
-                    <v-text-field
-                      label="Adress"
-                      v-model="adress"
-                      outlined
-                      :error-messages="errors"
-                    ></v-text-field>
-                  </ValidationProvider>
-                </v-col>
-              </v-row>
-              <v-row justify="center" align="center">
-                <v-col cols="6">
-                  <ValidationProvider
-                    v-slot="{ errors }"
-                    name="City"
-                    rules="required"
-                  >
-                    <v-select
-                      :items="cities"
-                      item-text="name"
-                      v-model="city"
-                      label="City"
-                      outlined
-                      :error-messages="errors"
-                    ></v-select>
-                  </ValidationProvider>
-                </v-col>
-                <v-col cols="6">
-                  <ValidationProvider
-                    v-slot="{ errors }"
-                    name="District"
-                    rules="required"
-                  >
-                    <v-select
-                      label="District"
-                      :items="districts"
-                      outlined
-                      :error-messages="errors"
-                      v-model="district"
-                    ></v-select>
-                  </ValidationProvider>
-                </v-col>
-              </v-row>
-              <v-row justify="center" align="center">
-                <v-col cols="12">
-                  <ValidationProvider v-slot="{ errors }" name="Note" rules="">
-                    <v-textarea
-                      v-model="note"
-                      outlined
-                      auto-grow
-                      label="Note"
-                      rows="4"
-                      row-height="30"
-                      shaped
-                      :error-messages="errors"
-                    ></v-textarea>
-                  </ValidationProvider>
-                </v-col>
-              </v-row></form
-          ></ValidationObserver>
-        </v-card>
-      </v-col>
-      <v-col cols="5">
-        <v-card
-          elevation="0"
-          max-width="1450"
-          class="mx-auto text-left"
-          style="border-radius: 50px; position: fixed"
-        >
+      <v-row>
+        <v-col cols="12" lg="8">
+          <v-card elevation="0" width="100%" class="mx-auto">
+            <v-card-title>
+              Shipment Details
+            </v-card-title>
+            <ValidationObserver ref="form">
+              <form>
+                <v-row justify="center" align="center">
+                  <v-col cols="6" lg="5">
+                    <ValidationProvider
+                      v-slot="{ errors }"
+                      name="Name"
+                      rules="required"
+                    >
+                      <v-text-field
+                        label="Name"
+                        v-model="name"
+                        outlined
+                        :error-messages="errors"
+                      ></v-text-field>
+                    </ValidationProvider>
+                  </v-col>
+                  <v-col cols="6" lg="7">
+                    <ValidationProvider
+                      v-slot="{ errors }"
+                      name="Phone"
+                      rules="required|numeric|min:8"
+                    >
+                      <v-text-field
+                        label="Phone Number"
+                        v-model="phoneNumber"
+                        outlined
+                        :error-messages="errors"
+                      ></v-text-field>
+                    </ValidationProvider>
+                  </v-col>
+                </v-row>
+                <v-row justify="center" align="center">
+                  <v-col cols="12">
+                    <ValidationProvider
+                      v-slot="{ errors }"
+                      name="Adress"
+                      rules="required"
+                    >
+                      <v-text-field
+                        label="Adress"
+                        v-model="adress"
+                        outlined
+                        :error-messages="errors"
+                      ></v-text-field>
+                    </ValidationProvider>
+                  </v-col>
+                </v-row>
+                <v-row justify="center" align="center">
+                  <v-col cols="6">
+                    <ValidationProvider
+                      v-slot="{ errors }"
+                      name="City"
+                      rules="required"
+                    >
+                      <v-select
+                        :items="cities"
+                        item-text="name"
+                        v-model="city"
+                        label="City"
+                        outlined
+                        :error-messages="errors"
+                      ></v-select>
+                    </ValidationProvider>
+                  </v-col>
+                  <v-col cols="6">
+                    <ValidationProvider
+                      v-slot="{ errors }"
+                      name="District"
+                      rules="required"
+                    >
+                      <v-select
+                        label="District"
+                        :items="districts"
+                        outlined
+                        :error-messages="errors"
+                        v-model="district"
+                      ></v-select>
+                    </ValidationProvider>
+                  </v-col>
+                </v-row>
+                <v-row justify="center" align="center">
+                  <v-col cols="12">
+                    <ValidationProvider
+                      v-slot="{ errors }"
+                      name="Note"
+                      rules=""
+                    >
+                      <v-textarea
+                        v-model="note"
+                        outlined
+                        auto-grow
+                        label="Note"
+                        rows="4"
+                        row-height="30"
+                        shaped
+                        :error-messages="errors"
+                      ></v-textarea>
+                    </ValidationProvider>
+                  </v-col>
+                </v-row></form
+            ></ValidationObserver>
+          </v-card>
+        </v-col>
+
+        <v-col cols="12" lg="4">
           <v-card-title>Checkout</v-card-title>
           <v-card-text class="text--primary"> </v-card-text>
-          <v-divider inset style="width: 270px"></v-divider>
           <v-card-text class="text--primary">
             <v-row justify="center" align="center">
-              <v-col cols="5">
+              <v-col cols="4">
                 <div>Subtotal:</div>
               </v-col>
-              <v-col cols="7">
+              <v-col cols="8">
                 <div class="ml-7" style="font-size: 1.5rem">
                   {{ getTotalSave | moneyFilter }}
                 </div>
@@ -138,15 +133,13 @@
 
             <v-row justify="center" align="center">
               <v-col cols="12">
-                <v-btn @click="onCheckout" x-large color="success" dark
-                  >Checkout</v-btn
-                >
+                <v-btn @click="onCheckout" x-large color="teal">Checkout</v-btn>
               </v-col>
             </v-row>
           </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+        </v-col>
+      </v-row>
+    </v-card>
   </div>
 </template>
 
@@ -214,7 +207,13 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getCart", "getTotal", "getTotalSave", "getSale"])
+    ...mapGetters([
+      "getCart",
+      "getTotal",
+      "getTotalSave",
+      "getSale",
+      "getCartLength"
+    ])
   },
   watch: {
     async city() {
@@ -232,7 +231,12 @@ export default {
   },
   methods: {
     async onCheckout() {
-      (await this.$refs.form.validate()) && this.onPostData();
+      ((await this.$refs.form.validate()) && this.onPostData()) ||
+        this.$vs.notify({
+          title: "Vui Lòng nhập thông tin",
+          color: "danger",
+          time: 5000
+        });
     },
     async onPostData() {
       try {
@@ -267,7 +271,7 @@ export default {
             this.$vs.notify({
               title: "Đặt hàng thành công",
               text: "Chúng tôi sẽ liên hệ bạn",
-              color: "success",
+              color: "teal",
               time: 5000
             });
             this.$store.commit("resetState");
@@ -278,6 +282,9 @@ export default {
         console.log(err);
       }
     }
+  },
+  updated() {
+    if (this.getCartLength <= 0) this.$router.push("/");
   }
 };
 </script>

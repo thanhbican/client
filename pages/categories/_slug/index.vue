@@ -2,17 +2,21 @@
   <div>
     <v-card class="mx-auto mt-5" :max-width="numberLength" elevation="0">
       <v-row>
-        <v-btn class="text-h4" text disabled>{{categories.type}}</v-btn>
+        <v-btn class="text-h4" text disabled>{{ categories.type }}</v-btn>
       </v-row>
       <v-row justify="center" align="center">
-        <v-col cols="10">
-          <div class="d-flex">
+        <v-col cols="7" lg="10">
+          <div class="d-flex" v-if="!smAndDown">
             <v-btn disabled text>Hiển thị</v-btn>
-            <v-btn text @click="forProduct" :class="{'red--text': selected}" >4</v-btn>
-            <v-btn text @click="sixProduct" :class="{'red--text': !selected}">6</v-btn>
+            <v-btn text @click="forProduct" :class="{ 'red--text': selected }"
+              >4</v-btn
+            >
+            <v-btn text @click="sixProduct" :class="{ 'red--text': !selected }"
+              >6</v-btn
+            >
           </div>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="5" lg="2">
           <v-select
             :items="items"
             label="Sắp xếp"
@@ -24,22 +28,24 @@
         </v-col>
       </v-row>
 
-      <v-row>
+      <v-row >
         <v-card elevation="0" width="100%" class="mx-auto">
-          <v-row>
+          <v-row :class="smAndDown?'ml-3':''">
             <v-col
-              :cols="numberProduct"
+              cols="6"
+              :lg="numberProduct"
               v-for="(product, index) in products"
               :key="index"
+              
             >
               <vs-card actionable>
                 <v-card
                   class="text-center"
                   outlined
-                  @click="checkRoute(product._id)"
+                  @click="checkRoute(product.slug)"
                 >
-                  <v-img :src="product.photo" contain> </v-img>
-                  <v-card class="rounded-xl ma-5" outlined color="">
+                  <v-img :src="product.photo[0]" contain> </v-img>
+                  <v-card class="rounded-xl" outlined color="">
                     <v-card-title
                       class="mt-4 item-title d-block text-subtitle-2"
                     >
@@ -60,7 +66,7 @@
                           <v-btn
                             small
                             color="orange"
-                            @click="addProduct(product)"
+                            @click.stop="addProduct(product,1)"
                           >
                             <v-icon small color="white">mdi-cart</v-icon>
                           </v-btn>
@@ -96,6 +102,7 @@ export default {
   },
   data() {
     return {
+      smAndDown: this.$vuetify.breakpoint.smAndDown,
       selected: true,
       numberLength: 1050,
       numberProduct: 3,
@@ -110,8 +117,8 @@ export default {
   },
   methods: {
     ...mapActions(["addProductToCart"]),
-    checkRoute(id) {
-        this.$router.push(`/product/${id}`);
+    checkRoute(slug) {
+      this.$router.push(`/product/${slug}`);
     },
     moneyA() {
       this.products.sort((a, b) => a.price - b.price);
@@ -129,40 +136,39 @@ export default {
         return b.title.localeCompare(a.title, "vi");
       });
     },
-    addProduct(product) {
+    addProduct(product, amount) {
       let prod = this.getCart.find(prod => prod._id === product._id);
       if (prod === undefined) {
-        this.addProductToCart(product) &&
+        this.addProductToCart({ product, amount }) &&
           this.$vs.notify({
             title: "Đã thêm",
             text: product.title,
-            color: "success"
+            color: "teal"
           });
-      } else if (prod.quantity < prod.stockQuantity) {
-        this.addProductToCart(product) &&
+      } else if (prod.quantity + amount <= prod.stockQuantity) {
+        this.addProductToCart({ product, amount }) &&
           this.$vs.notify({
             title: "Đã thêm",
             text: product.title,
-            color: "success"
+            color: "teal"
           });
       } else {
-        this.addProductToCart(product) &&
-          this.$vs.notify({
-            title: "Lỗi",
-            text: "Kho hàng của sản phẩm không đủ",
-            color: "danger"
-          });
+        this.$vs.notify({
+          title: "Lỗi",
+          text: "Kho hàng của sản phẩm không đủ",
+          color: "danger"
+        });
       }
     },
     forProduct() {
       this.numberLength = 1050;
       this.numberProduct = 3;
-      this.selected =! this.selected;
+      this.selected = !this.selected;
     },
     sixProduct() {
       this.numberLength = 1450;
       this.numberProduct = 2;
-      this.selected =! this.selected;
+      this.selected = !this.selected;
     },
     test(a) {
       let item = this.items.find(item => item.name === a);
@@ -188,11 +194,19 @@ export default {
 
 <style scoped>
 /* item */
+.row{
+  width: 100%;
+}
 .item-title {
-  padding: 0.3rem;
+  line-height: 1.5em;
+  height: 4em;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  padding: 0.8rem;
+}
+.item-title::before {
+  content: "...";
+  float: right;
+  margin-top: 1.5em;
 }
 .cardCustom >>> .vs-card--content {
   font-size: 0.8rem;

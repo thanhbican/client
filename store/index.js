@@ -6,12 +6,12 @@ export const state = () => ({
 });
 
 export const actions = {
-  addProductToCart({ state, commit }, product) {
+  addProductToCart({ state, commit }, {product,amount}) {
     const cartProduct = state.cart.find(prod => prod._id === product._id);
     if (!cartProduct) {
-      commit("pushProductToCart", product);
+      commit("pushProductToCart", {product,amount});
     } else {
-      commit("incrementProductQty", cartProduct);
+      commit("incrementProductQty", {cartProduct,amount});
     }
 
     commit("incrementCardLength");
@@ -19,14 +19,14 @@ export const actions = {
 };
 
 export const mutations = {
-  pushProductToCart(state, product) {
-    product.quantity = 1;
+  pushProductToCart(state, {product,amount}) {
+    product.quantity = amount;
     state.cart.push(product);
   },
-  incrementProductQty(state, product) {
-    product.quantity++;
-    let indexOfProduct = state.cart.indexOf(product);
-    state.cart.splice(indexOfProduct, 1, product);
+  incrementProductQty(state, {cartProduct,amount}) {
+    cartProduct.quantity += amount;
+    let indexOfProduct = state.cart.indexOf(cartProduct);
+    state.cart.splice(indexOfProduct, 1, cartProduct);
   },
   incrementCardLength(state) {
     state.cartLength = 0;

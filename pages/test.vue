@@ -1,7 +1,7 @@
 <template>
   <v-container class="trangchu" fluid>
     <div class="">
-      <svg class="intro go" viewBox="0 0 200 86" >
+      <svg class="intro go" viewBox="0 0 200 86">
         <text
           text-anchor="start"
           x="30"
@@ -69,42 +69,92 @@
         </defs>
       </svg>
     </div>
-    <div class="test animate__animated animate__bounceInDown animate__slower animate__delay-2s">
+    <div
+      class="test animate__animated animate__bounceInDown animate__slower animate__delay-2s"
+    >
       <kinesis-container>
         <kinesis-element :strength="10">
           <v-btn x-large text to="/" color="black" style="font-size: 2rem">
-              <v-icon left>mdi-home</v-icon>
-              Trang Chủ</v-btn>
+            <v-icon left>mdi-home</v-icon>
+            Trang Chủ</v-btn
+          >
         </kinesis-element>
       </kinesis-container>
     </div>
 
-    <div class="test2 animate__animated animate__bounceInUp animate__slower animate__delay-2s">
+    <div
+      class="test2 animate__animated animate__bounceInUp animate__slower animate__delay-2s"
+    >
       <kinesis-container>
         <kinesis-element :strength="10">
-          <v-btn class="custom" x-large text color="black" style="font-size: 2rem">
-              <v-icon left style="font-size:1rem">mdi-format-list-bulleted-square</v-icon> Danh Mục</v-btn>
+          <v-btn
+            @click="drawer = !drawer"
+            class="custom"
+            x-large
+            text
+            color="black"
+            style="font-size: 2rem"
+          >
+            <v-icon left style="font-size:1rem"
+              >mdi-format-list-bulleted-square</v-icon
+            >
+            Danh Mục</v-btn
+          >
         </kinesis-element>
       </kinesis-container>
     </div>
+
+    <v-navigation-drawer v-model="drawer" temporary app right>
+      <v-list-item>
+        <v-list-item-avatar>
+          <v-img
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTemrUGDUV8rIC3SJuxQJfpJ9QJi9zzaxm80UX3yd1G4m6YrXGB&usqp=CAU"
+          ></v-img>
+        </v-list-item-avatar>
+
+        <v-list-item-content>
+          <v-list-item-title>Danh Mục</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+      <v-list dense>
+        <v-list-item v-for="item in categories" :key="item.type" link>
+          <v-list-item-content @click="link(item.slug)">
+            <v-list-item-title>{{ item.type }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
   </v-container>
 </template>
 
 <script>
 export default {
-  layout: "none",
+  async asyncData({ $axios }) {
+    let response = await $axios.$get("/api/categories");
+    return {
+      categories: response.categories
+    };
+  },
+  layout: "none2",
+  data() {
+    return {
+      drawer: false
+    };
+  }
 };
 </script>
 
 <style scoped lang="scss">
-.mdi:before{
+.mdi:before {
   font-size: 1rem;
 }
 .trangchu {
   height: 100vh;
   padding: 0;
   margin: 0;
-  background: linear-gradient(135deg, #BED2DB, #ffffff);
+  background: linear-gradient(135deg, #bed2db, #ffffff);
 }
 
 .test {
@@ -138,7 +188,7 @@ svg.intro {
     }
     .text-stroke {
       fill: none;
-      stroke: #2375BF;
+      stroke: #2375bf;
       stroke-width: 2.8px;
       stroke-dashoffset: -900;
       stroke-dasharray: 900;

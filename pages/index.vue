@@ -1,10 +1,6 @@
 <template>
   <div>
-    <v-card
-      elevation="0"
-      max-width="1050"
-      class="mx-auto"
-    >
+    <v-card elevation="0" max-width="1050" class="mx-auto">
       <v-skeleton-loader
         :loading="loading"
         class="skeletonMain mx-auto"
@@ -13,7 +9,7 @@
         type="image"
       >
         <v-carousel
-          height="409"
+          :height="smAndDown ? 200 : 500"
           cycle
           hide-delimiter-background
           show-arrows-on-hover
@@ -43,21 +39,35 @@
         height="600"
         type="image"
       >
-        <v-card
-          class="text-center rounded-xl"
-          color="grey darken-4"
-          max-width="200"
-          outlined
-        >
-          <!-- type -->
-          <v-btn
-            text
-            class="text-capitalize text-subtitle-2 white--text"
-            :to="`/categories/${category._id[0].slug}`"
-          >
-            {{ category._id[0].type }}
-          </v-btn>
-        </v-card>
+        <v-row>
+          <v-col cols="6" lg="10">
+            <v-card
+              class="text-center rounded-xl"
+              color="grey darken-4"
+              max-width="200"
+              outlined
+            >
+              <!-- type -->
+              <v-btn
+                text
+                class="text-capitalize text-subtitle-2 white--text"
+                :to="`/categories/${category._id[0].slug}`"
+              >
+                {{ category._id[0].type }}
+              </v-btn>
+            </v-card>
+          </v-col>
+          <v-col cols="6" lg="2">
+            <v-btn
+              text
+              class="text-capitalize text-subtitle-2"
+              :to="`/categories/${category._id[0].slug}`"
+            >
+              Xem thêm
+              <v-icon right>read_more</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
 
         <v-row>
           <!-- <v-col cols="3" class="d-flex align-stretch" style="max-height:600px">
@@ -69,7 +79,7 @@
           </v-col> -->
           <!-- col-12 -->
           <v-col cols="12">
-            <swiper class="swiper" :options="swiperOption">
+            <swiper class="swiper pb-6" :options="swiperOption">
               <!-- swiper-slide -->
               <swiper-slide
                 v-for="(product, index) in category.products.slice(0, 6)"
@@ -80,10 +90,10 @@
                   <v-card
                     class="text-center"
                     outlined
-                    @click="checkRoute(product._id)"
+                    @click="checkRoute(product.slug)"
                   >
-                    <v-img :src="product.photo" contain> </v-img>
-                    <v-card class="rounded-xl ma-5" outlined color="">
+                    <v-img :src="product.photo[0]" contain> </v-img>
+                    <v-card class="rounded-xl " width="100%" outlined color="">
                       <v-card-title
                         class="mt-4 item-title d-block text-subtitle-2"
                       >
@@ -95,16 +105,16 @@
                       >
                         Grape Fruit
                       </v-card-subtitle> -->
-                      <v-card-title class="">
+                      <v-card-title :style="smAndDown?'padding: 16px 0px 16px 0px':''">
                         <div style="width: 100%">
-                          <div class="red--text ">
+                          <div class="red--text">
                             {{ product.price | moneyFilter }}
                           </div>
                           <div>
                             <v-btn
                               small
                               color="orange"
-                              @click.stop="addProduct(product)"
+                              @click.stop="addProduct(product, 1)"
                             >
                               <v-icon small color="white">mdi-cart</v-icon>
                             </v-btn>
@@ -157,11 +167,12 @@ export default {
   },
   data() {
     return {
+      smAndDown: this.$vuetify.breakpoint.smAndDown,
       //skeleton
       loading: true,
       //swiper
       swiperOption: {
-        slidesPerView: 4,
+        slidesPerView: this.$vuetify.breakpoint.smAndDown ? 2 : 4,
         slidesPerColumn: 1,
         spaceBetween: 20,
         pagination: {
@@ -176,19 +187,19 @@ export default {
       items: [
         {
           src:
-            "http://image.ethefaceshop.com/tfsshopWebSrc/upload/banner//202006/banner_20200616130371846.jpg"
+            "https://res.cloudinary.com/thefaceshop/image/upload/v1593068507/logo/banner_20200616130371846_cub8dx.jpg"
         },
         {
           src:
-            "http://image.ethefaceshop.com/tfsshopWebSrc/upload/banner//202006/banner_20200604122032400.jpg"
+            "https://res.cloudinary.com/thefaceshop/image/upload/v1593068522/logo/banner_20200604122032400_nsgpjd.jpg"
         },
         {
           src:
-            "http://image.ethefaceshop.com/tfsshopWebSrc/upload/banner//202006/banner_20200604122094117.jpg"
+            "https://res.cloudinary.com/thefaceshop/image/upload/v1593068529/logo/banner_20200604122094117_cykavn.jpg"
         },
         {
           src:
-            "http://image.ethefaceshop.com/tfsshopWebSrc/upload/banner//202006/banner_20200616130443211.jpg"
+            "https://res.cloudinary.com/thefaceshop/image/upload/v1593068538/logo/banner_20200616130443211_zpbrjd.jpg"
         }
       ]
     };
@@ -206,32 +217,31 @@ export default {
   },
   methods: {
     ...mapActions(["addProductToCart"]),
-    checkRoute(id, event) {
-        this.$router.push(`/product/${id}`);
+    checkRoute(slug, event) {
+      this.$router.push(`/product/${slug}`);
     },
-    addProduct(product) {
+    addProduct(product, amount) {
       let prod = this.getCart.find(prod => prod._id === product._id);
       if (prod === undefined) {
-        this.addProductToCart(product) &&
+        this.addProductToCart({ product, amount }) &&
           this.$vs.notify({
             title: "Đã thêm",
             text: product.title,
-            color: "success"
+            color: "teal"
           });
-      } else if (prod.quantity < prod.stockQuantity) {
-        this.addProductToCart(product) &&
+      } else if (prod.quantity + amount <= prod.stockQuantity) {
+        this.addProductToCart({ product, amount }) &&
           this.$vs.notify({
             title: "Đã thêm",
             text: product.title,
-            color: "success"
+            color: "teal"
           });
       } else {
-        this.addProductToCart(product) &&
-          this.$vs.notify({
-            title: "Lỗi",
-            text: "Kho hàng của sản phẩm không đủ",
-            color: "danger"
-          });
+        this.$vs.notify({
+          title: "Lỗi",
+          text: "Kho hàng của sản phẩm không đủ",
+          color: "danger"
+        });
       }
     }
   },
@@ -289,10 +299,16 @@ export default {
 } */
 /* item */
 .item-title {
-  padding: 0.3rem;
+  line-height: 1.5em;
+  height: 3.5em;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  padding: 0.5rem;
+}
+
+.item-title::before {
+  content: "...";
+  float: right;
+  margin-top: 1.5em;
 }
 /* skeleton */
 .skeleton >>> .v-skeleton-loader__image {
