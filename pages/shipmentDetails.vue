@@ -52,7 +52,7 @@
                     >
                       <v-text-field
                         label="Adress"
-                        v-model="adress"
+                        v-model="address"
                         outlined
                         :error-messages="errors"
                       ></v-text-field>
@@ -187,7 +187,7 @@ export default {
     return {
       name: "",
       phoneNumber: "",
-      adress: "",
+      address: "",
       city: null,
       districts: [],
       district: "",
@@ -245,8 +245,6 @@ export default {
         } else {
           let cart = [];
           this.getCart.map(x => {
-            delete x["rate"];
-            delete x["owner"];
             delete x["category"];
             delete x["description"];
             delete x["stockQuantity"];
@@ -254,7 +252,11 @@ export default {
             delete x["__v"];
           });
 
-          await this.$axios.$put("/api/productsStockQuantity", this.getCart);
+          let stockQ = this.$axios.$put(
+            "/api/productsStockQuantity",
+            this.getCart
+          );
+          let prodSold = this.$axios.$put("/api/productsSold", this.getCart);
           let data = {
             name: this.name,
             phoneNumber: this.phoneNumber,
@@ -266,7 +268,11 @@ export default {
             sale: this.getSale,
             price: this.getTotalSave
           };
-          let response = await this.$axios.$post("/api/orders", data);
+
+          let order = this.$axios.$post("/api/orders", data);
+
+          let [response] = await Promise.all([stockQ, prodSold,order]);
+          console.log(response)
           if (response.success) {
             this.$vs.notify({
               title: "Đặt hàng thành công",

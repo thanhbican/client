@@ -110,7 +110,7 @@ export default {
       items: [
         { name: "Giá thấp dần", action: this.moneyA },
         { name: "Giá cao dần", action: this.moneyD },
-        { name: "Bán chạy nhất", action: this.nameA }
+        { name: "Bán chạy nhất", action: this.bestSeller }
       ],
       radios: ""
     };
@@ -126,15 +126,8 @@ export default {
     moneyD() {
       this.products.sort((a, b) => b.price - a.price);
     },
-    nameA() {
-      this.products.sort((a, b) => {
-        return a.title.localeCompare(b.title, "vi");
-      });
-    },
-    nameD() {
-      this.products.sort((a, b) => {
-        return b.title.localeCompare(a.title, "vi");
-      });
+    bestSeller() {
+      this.products.sort((a, b) => b.numberSale - a.numberSale);
     },
     addProduct(product, amount) {
       let prod = this.getCart.find(prod => prod._id === product._id);

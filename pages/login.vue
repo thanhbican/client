@@ -152,7 +152,6 @@ export default {
     async onSignin() {
       try {
         const tokenRe = await this.$recaptcha.getResponse();
-        console.log("ReCaptcha token:", tokenRe);
         this.overlay = true;
         await this.$recaptcha.reset();
         let data = {

@@ -95,7 +95,7 @@
                     <v-img :src="product.photo[0]" contain> </v-img>
                     <v-card class="rounded-xl " width="100%" outlined color="">
                       <v-card-title
-                        class="mt-4 item-title d-block text-subtitle-2"
+                        class="mt-4 item-title d-block text-subtitle-2 text-break"
                       >
                         {{ product.title }}
                       </v-card-title>
@@ -306,7 +306,6 @@ export default {
 }
 
 .item-title::before {
-  content: "...";
   float: right;
   margin-top: 1.5em;
 }
